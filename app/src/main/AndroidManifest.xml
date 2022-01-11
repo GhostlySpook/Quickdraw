@@ -7,9 +7,9 @@
         tools:replace="android:icon"
         android:allowBackup="true"
         android:configChanges="orientation"
-        android:icon="@mipmap/Pyo_Icon"
+        android:icon="@mipmap/pyo_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/Pyo_Icon_round"
+        android:roundIcon="@mipmap/pyo_icon_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         >

@@ -303,7 +303,7 @@ public class MainActivity extends AppCompatActivity {
     //Period before a shooter is supposed to shoot//////////////////
     public void preShot(View view){
         mpEarly.start();
-        imageViewAnnouncer.setImageDrawable(imgAnnouncerFire);
+        mpWind.stop();
         flash();
 
         //Check who shot, that one will lose
