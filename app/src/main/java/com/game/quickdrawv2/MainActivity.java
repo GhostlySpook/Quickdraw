@@ -22,17 +22,8 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity {
     Resources resources;
 
-    Button btnStart;
-    ImageButton btnPlayer1;
-    ImageButton btnPlayer2;
-    Button btnExit;
-
-    ImageView imageViewBackground;
-    ImageView imageViewTitle;
-    ImageView imageViewPlayer1;
-    ImageView imageViewPlayer2;
-    ImageView imageViewAnnouncer;
-    ImageView imageViewFlash;
+    GameComponentManager gcm;
+    ResourceLoader rl;
 
     Player player1;
     Player player2;
@@ -46,37 +37,6 @@ public class MainActivity extends AppCompatActivity {
     TimerTask cleanTask;
 
     Timer timer = new Timer();
-
-    //Images that are going to be used
-    Drawable imgPlayer1;
-    Drawable imgPlayer1Early;
-    Drawable imgPlayer1Ready;
-    Drawable imgPlayer1Shoot;
-    Drawable imgPlayer1Shot;
-
-    Drawable imgPlayer1BtnIdle;
-    Drawable imgPlayer1BtnReady;
-    Drawable imgPlayer1BtnWait;
-    Drawable imgPlayer1BtnFire;
-    Drawable imgPlayer1BtnWin;
-    Drawable imgPlayer1BtnLose;
-
-    Drawable imgPlayer2;
-    Drawable imgPlayer2Early;
-    Drawable imgPlayer2Ready;
-    Drawable imgPlayer2Shoot;
-    Drawable imgPlayer2Shot;
-
-    Drawable imgPlayer2BtnIdle;
-    Drawable imgPlayer2BtnReady;
-    Drawable imgPlayer2BtnWait;
-    Drawable imgPlayer2BtnFire;
-    Drawable imgPlayer2BtnWin;
-    Drawable imgPlayer2BtnLose;
-
-    Drawable imgAnnouncer;
-    Drawable imgAnnouncerReady;
-    Drawable imgAnnouncerFire;
 
     //Prepare media player
     MediaPlayer mpPlayer1;
@@ -109,61 +69,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         setContentView(R.layout.activity_main);
+        gcm = new GameComponentManager(this);
+        rl = new ResourceLoader(this);
         resources = getResources();
 
-        //Assign Buttons and ImageViews
-        btnStart = (Button)findViewById(R.id.btnStart);
-        btnPlayer1 = (ImageButton)findViewById(R.id.btnReady1);
-        btnPlayer2 = (ImageButton)findViewById(R.id.btnReady2);
-        btnExit = (Button)findViewById(R.id.btnExit);
-
-        imageViewBackground = (ImageView)findViewById(R.id.imgBackground);
-        imageViewTitle = (ImageView)findViewById(R.id.imgTitle);
-        imageViewPlayer1 = (ImageView)findViewById(R.id.imgPlayer1);
-        imageViewPlayer2 = (ImageView)findViewById(R.id.imgPlayer2);
-        imageViewAnnouncer = findViewById(R.id.imgAnnouncer);
-        imageViewFlash = (ImageView)findViewById(R.id.imgFlash);
-
         //Assign animated elements
-        animBackground = new Animated(imageViewBackground);
-        animPlayer1 = new Animated(imageViewPlayer1);
-        animPlayer2 = new Animated(imageViewPlayer2);
+        animBackground = new Animated(gcm.imageViewBackground);
+        animPlayer1 = new Animated(gcm.imageViewPlayer1);
+        animPlayer2 = new Animated(gcm.imageViewPlayer2);
 
         //Start player instances
         player1 = new Player(animPlayer1);
         player2 = new Player(animPlayer2);
-
-        //Load drawables
-        imgPlayer1 = resources.getDrawable(R.drawable.player1);
-        imgPlayer1Early = resources.getDrawable(R.drawable.player1_early);
-        imgPlayer1Ready = resources.getDrawable(R.drawable.player1_ready);
-        imgPlayer1Shoot = resources.getDrawable(R.drawable.player1_shoot);
-        imgPlayer1Shot = resources.getDrawable(R.drawable.player1_shot);
-
-        imgPlayer1BtnIdle = resources.getDrawable(R.drawable.player1_idle_button);
-        imgPlayer1BtnReady = resources.getDrawable(R.drawable.player1_ready_button);
-        imgPlayer1BtnWait = resources.getDrawable(R.drawable.player1_wait_button);
-        imgPlayer1BtnFire = resources.getDrawable(R.drawable.player1_fire_button);
-        imgPlayer1BtnWin = resources.getDrawable(R.drawable.player1_win_button);
-        imgPlayer1BtnLose = resources.getDrawable(R.drawable.player1_lose_button);
-
-        imgPlayer2 = resources.getDrawable(R.drawable.player2);
-        imgPlayer2Early = resources.getDrawable(R.drawable.player2_early);
-        imgPlayer2Ready = resources.getDrawable(R.drawable.player2_ready);
-        imgPlayer2Shoot = resources.getDrawable(R.drawable.player2_shoot);
-        imgPlayer2Shot = resources.getDrawable(R.drawable.player2_shot);
-        imgPlayer2BtnWait = resources.getDrawable(R.drawable.player2_wait_button);
-
-        imgPlayer2BtnIdle = resources.getDrawable(R.drawable.player2_idle_button);
-        imgPlayer2BtnReady = resources.getDrawable(R.drawable.player2_ready_button);
-        imgPlayer2BtnWait = resources.getDrawable(R.drawable.player2_wait_button);
-        imgPlayer2BtnFire = resources.getDrawable(R.drawable.player2_fire_button);
-        imgPlayer2BtnWin = resources.getDrawable(R.drawable.player2_win_button);
-        imgPlayer2BtnLose = resources.getDrawable(R.drawable.player2_lose_button);
-
-        imgAnnouncer = resources.getDrawable(R.drawable.announcer);
-        imgAnnouncerReady = resources.getDrawable(R.drawable.announcer_ready);
-        imgAnnouncerFire = resources.getDrawable(R.drawable.announcer_fire);
 
         //Load sounds
         mpPlayer1 = MediaPlayer.create(this, R.raw.cock);
@@ -176,27 +93,27 @@ public class MainActivity extends AppCompatActivity {
 
     public void onStartButtonClick(View view){
         view.setVisibility(View.INVISIBLE);
-        imageViewTitle.setVisibility(View.INVISIBLE);
-        btnExit.setVisibility(View.INVISIBLE);
-        imageViewAnnouncer.setVisibility(View.VISIBLE);
+        gcm.imageViewTitle.setVisibility(View.INVISIBLE);
+        gcm.btnExit.setVisibility(View.INVISIBLE);
+        gcm.imageViewAnnouncer.setVisibility(View.VISIBLE);
 
-        btnPlayer1.setVisibility(View.VISIBLE);
-        btnPlayer2.setVisibility(View.VISIBLE);
+        gcm.btnPlayer1.setVisibility(View.VISIBLE);
+        gcm.btnPlayer2.setVisibility(View.VISIBLE);
     }
 
     //Ask if players are ready/////////////////////////////////////////////
     public void onPlayer1ButtonClick(View view){
         player1.setReady(true);
-        btnPlayer1.setImageDrawable(imgPlayer1BtnReady);
-        imageViewPlayer1.setImageDrawable(imgPlayer1Ready);
+        gcm.btnPlayer1.setImageDrawable(rl.imgPlayer1BtnReady);
+        gcm.imageViewPlayer1.setImageDrawable(rl.imgPlayer1Ready);
         mpPlayer1.start();
         checkReady();
     }
 
     public void onPlayer2ButtonClick(View view){
         player2.setReady(true);
-        btnPlayer2.setImageDrawable(imgPlayer2BtnReady);
-        imageViewPlayer2.setImageDrawable(imgPlayer2Ready);
+        gcm.btnPlayer2.setImageDrawable(rl.imgPlayer2BtnReady);
+        gcm.imageViewPlayer2.setImageDrawable(rl.imgPlayer2Ready);
         mpPlayer2.start();
         checkReady();
     }
@@ -216,19 +133,19 @@ public class MainActivity extends AppCompatActivity {
         mpWind.start();
 
         //Show waiting characters
-        btnPlayer1.setImageDrawable(imgPlayer1BtnWait);
-        btnPlayer2.setImageDrawable(imgPlayer2BtnWait);
-        imageViewAnnouncer.setImageDrawable(imgAnnouncerReady);
+        gcm.btnPlayer1.setImageDrawable(rl.imgPlayer1BtnWait);
+        gcm.btnPlayer2.setImageDrawable(rl.imgPlayer2BtnWait);
+        gcm.imageViewAnnouncer.setImageDrawable(rl.imgAnnouncerReady);
 
         //Add failure if pressed a button before the alarm sounds
-        btnPlayer1.setOnClickListener(new View.OnClickListener() {
+        gcm.btnPlayer1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 preShot(v);
             }
         });
 
-        btnPlayer2.setOnClickListener(new View.OnClickListener() {
+        gcm.btnPlayer2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 preShot(v);
@@ -243,14 +160,14 @@ public class MainActivity extends AppCompatActivity {
         readyShootTask = new TimerTask() {
             @Override
             public void run() {
-                btnPlayer1.setOnClickListener(new View.OnClickListener() {
+                gcm.btnPlayer1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         waitShot(v);
                     }
                 });
 
-                btnPlayer2.setOnClickListener(new View.OnClickListener() {
+                gcm.btnPlayer2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         waitShot(v);
@@ -264,10 +181,10 @@ public class MainActivity extends AppCompatActivity {
 
                         // Stuff that updates the UI
                         //btnPlayer1.setText(R.string.fire_message);
-                        btnPlayer1.setImageDrawable(imgPlayer1BtnFire);
+                        gcm.btnPlayer1.setImageDrawable(rl.imgPlayer1BtnFire);
                         //btnPlayer2.setText(R.string.fire_message);
-                        btnPlayer2.setImageDrawable(imgPlayer2BtnFire);
-                        imageViewAnnouncer.setImageDrawable(imgAnnouncerFire);
+                        gcm.btnPlayer2.setImageDrawable(rl.imgPlayer2BtnFire);
+                        gcm.imageViewAnnouncer.setImageDrawable(rl.imgAnnouncerFire);
                         //timer.cancel();
 
                         //Make sound and stop wind
@@ -283,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void flash(){
-        imageViewFlash.setVisibility(View.VISIBLE);
+        gcm.imageViewFlash.setVisibility(View.VISIBLE);
 
         TimerTask hideFlashTask = new TimerTask() {
             @Override
@@ -291,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        imageViewFlash.setVisibility(View.INVISIBLE);
+                        gcm.imageViewFlash.setVisibility(View.INVISIBLE);
                     }
                 });
             }
@@ -310,17 +227,17 @@ public class MainActivity extends AppCompatActivity {
         switch(view.getId()){
             case R.id.btnReady1:
                 //btnPlayer1.setText(R.string.lose_message);
-                btnPlayer1.setImageDrawable(imgPlayer1BtnLose);
-                imageViewPlayer1.setImageDrawable(imgPlayer1Early);
+                gcm.btnPlayer1.setImageDrawable(rl.imgPlayer1BtnLose);
+                gcm.imageViewPlayer1.setImageDrawable(rl.imgPlayer1Early);
                 //btnPlayer2.setText(R.string.win_message);
-                btnPlayer2.setImageDrawable(imgPlayer2BtnWin);
+                gcm.btnPlayer2.setImageDrawable(rl.imgPlayer2BtnWin);
                 break;
             case R.id.btnReady2:
                 //btnPlayer1.setText(R.string.win_message);
-                btnPlayer1.setImageDrawable(imgPlayer1BtnWin);
+                gcm.btnPlayer1.setImageDrawable(rl.imgPlayer1BtnWin);
                 //btnPlayer2.setText(R.string.lose_message);
-                btnPlayer2.setImageDrawable(imgPlayer2BtnLose);
-                imageViewPlayer2.setImageDrawable(imgPlayer2Early);
+                gcm.btnPlayer2.setImageDrawable(rl.imgPlayer2BtnLose);
+                gcm.imageViewPlayer2.setImageDrawable(rl.imgPlayer2Early);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + view.getId());
@@ -338,19 +255,19 @@ public class MainActivity extends AppCompatActivity {
         switch(v.getId()){
             case R.id.btnReady1:
                 //btnPlayer1.setText(R.string.win_message);
-                btnPlayer1.setImageDrawable(imgPlayer1BtnWin);
-                imageViewPlayer1.setImageDrawable(imgPlayer1Shoot);
+                gcm.btnPlayer1.setImageDrawable(rl.imgPlayer1BtnWin);
+                gcm.imageViewPlayer1.setImageDrawable(rl.imgPlayer1Shoot);
                 //btnPlayer2.setText(R.string.lose_message);
-                btnPlayer2.setImageDrawable(imgPlayer2BtnLose);
-                imageViewPlayer2.setImageDrawable(imgPlayer2Shot);
+                gcm.btnPlayer2.setImageDrawable(rl.imgPlayer2BtnLose);
+                gcm.imageViewPlayer2.setImageDrawable(rl.imgPlayer2Shot);
                 break;
             case R.id.btnReady2:
                 //btnPlayer1.setText(R.string.lose_message);
-                btnPlayer1.setImageDrawable(imgPlayer1BtnLose);
-                imageViewPlayer1.setImageDrawable(imgPlayer1Shot);
+                gcm.btnPlayer1.setImageDrawable(rl.imgPlayer1BtnLose);
+                gcm.imageViewPlayer1.setImageDrawable(rl.imgPlayer1Shot);
                 //btnPlayer2.setText(R.string.win_message);
-                btnPlayer2.setImageDrawable(imgPlayer2BtnWin);
-                imageViewPlayer2.setImageDrawable(imgPlayer2Shoot);
+                gcm.btnPlayer2.setImageDrawable(rl.imgPlayer2BtnWin);
+                gcm.imageViewPlayer2.setImageDrawable(rl.imgPlayer2Shoot);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + v.getId());
@@ -365,8 +282,8 @@ public class MainActivity extends AppCompatActivity {
         readyShootTask.cancel();
 
         //Disable both buttons
-        btnPlayer1.setEnabled(false);
-        btnPlayer2.setEnabled(false);
+        gcm.btnPlayer1.setEnabled(false);
+        gcm.btnPlayer2.setEnabled(false);
 
         cleanTask = new TimerTask() {
             @Override
@@ -387,36 +304,36 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
 
                 // Stuff that updates the UI
-                imageViewTitle.setVisibility(View.VISIBLE);
-                btnStart.setVisibility(View.VISIBLE);
-                btnExit.setVisibility(View.VISIBLE);
+                gcm.imageViewTitle.setVisibility(View.VISIBLE);
+                gcm.btnStart.setVisibility(View.VISIBLE);
+                gcm.btnExit.setVisibility(View.VISIBLE);
 
-                btnPlayer1.setVisibility(View.INVISIBLE);
+                gcm.btnPlayer1.setVisibility(View.INVISIBLE);
                 //btnPlayer1.setText(R.string.not_ready_message);
-                btnPlayer1.setImageDrawable(imgPlayer1BtnIdle);
-                btnPlayer1.setEnabled(true);
-                btnPlayer1.setOnClickListener(new View.OnClickListener() {
+                gcm.btnPlayer1.setImageDrawable(rl.imgPlayer1BtnIdle);
+                gcm.btnPlayer1.setEnabled(true);
+                gcm.btnPlayer1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         onPlayer1ButtonClick(v);
                     }
                 });
-                imageViewPlayer1.setImageDrawable(imgPlayer1);
+                gcm.imageViewPlayer1.setImageDrawable(rl.imgPlayer1);
 
-                btnPlayer2.setVisibility(View.INVISIBLE);
+                gcm.btnPlayer2.setVisibility(View.INVISIBLE);
                 //btnPlayer2.setText(R.string.not_ready_message);
-                btnPlayer2.setImageDrawable(imgPlayer2BtnIdle);
-                btnPlayer2.setEnabled(true);
-                btnPlayer2.setOnClickListener(new View.OnClickListener() {
+                gcm.btnPlayer2.setImageDrawable(rl.imgPlayer2BtnIdle);
+                gcm.btnPlayer2.setEnabled(true);
+                gcm.btnPlayer2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         onPlayer2ButtonClick(v);
                     }
                 });
-                imageViewPlayer2.setImageDrawable(imgPlayer2);
+                gcm.imageViewPlayer2.setImageDrawable(rl.imgPlayer2);
 
-                imageViewAnnouncer.setImageDrawable(imgAnnouncer);
-                imageViewAnnouncer.setVisibility(View.INVISIBLE);
+                gcm.imageViewAnnouncer.setImageDrawable(rl.imgAnnouncer);
+                gcm.imageViewAnnouncer.setVisibility(View.INVISIBLE);
 
                 //timer.cancel();
             }
