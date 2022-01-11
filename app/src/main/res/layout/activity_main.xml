@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/imgBackground"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="Game background"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/background" />
+
+    <ImageView
+        android:id="@+id/imgPlayer1"
+        android:layout_width="132dp"
+        android:layout_height="131dp"
+        android:layout_marginStart="41dp"
+        android:layout_marginLeft="41dp"
+        android:layout_marginBottom="8dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/player1" />
+
+    <ImageView
+        android:id="@+id/imgPlayer2"
+        android:layout_width="132dp"
+        android:layout_height="131dp"
+        android:layout_marginEnd="41dp"
+        android:layout_marginRight="41dp"
+        android:layout_marginBottom="8dp"
+        android:rotationY="180"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/player2" />
+
+    <Button
+        android:id="@+id/btnExit"
+        android:layout_width="73dp"
+        android:layout_height="73dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/exit_button"
+        android:onClick="endApp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/imgTitle"
+        android:layout_width="506dp"
+        android:layout_height="227dp"
+        android:layout_marginStart="162dp"
+        android:layout_marginLeft="162dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="163dp"
+        android:layout_marginRight="163dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/title"
+        tools:visibility="invisible" />
+
+    <Button
+        android:id="@+id/btnStart"
+        android:layout_width="169dp"
+        android:layout_height="77dp"
+        android:layout_marginBottom="52dp"
+        android:background="@drawable/duel_button"
+        android:foreground="@drawable/duel_button"
+        android:onClick="onStartButtonClick"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imgBackground"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/imgBackground" />
+
+    <ImageView
+        android:id="@+id/imgAnnouncer"
+        android:layout_width="134dp"
+        android:layout_height="236dp"
+        android:layout_marginBottom="168dp"
+        android:scaleType="fitXY"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnReady2"
+        app:layout_constraintStart_toEndOf="@+id/btnReady1"
+        app:srcCompat="@drawable/announcer"
+        tools:visibility="visible" />
+
+    <ImageButton
+        android:id="@+id/btnReady1"
+        android:layout_width="251dp"
+        android:layout_height="188dp"
+        android:layout_marginStart="11dp"
+        android:layout_marginLeft="11dp"
+        android:layout_marginTop="27dp"
+        android:background="@android:color/transparent"
+        android:foreground="@drawable/player1_idle_button"
+        android:onClick="onPlayer1ButtonClick"
+        android:scaleType="fitXY"
+        android:src="@drawable/player1_idle_button"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <ImageButton
+        android:id="@+id/btnReady2"
+        android:layout_width="251dp"
+        android:layout_height="188dp"
+        android:layout_marginTop="27dp"
+        android:layout_marginEnd="11dp"
+        android:layout_marginRight="11dp"
+        android:background="@android:color/transparent"
+        android:foreground="@drawable/player2_idle_button"
+        android:onClick="onPlayer2ButtonClick"
+        android:scaleType="fitXY"
+        android:src="@drawable/player2_idle_button"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/imgFlash"
+        android:layout_width="748dp"
+        android:layout_height="435dp"
+        android:scaleType="fitXY"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/picture_frame" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

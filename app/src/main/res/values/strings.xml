@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Quickdraw!</string>
+    <string name="start_message">Duel!</string>
+    <string name="not_ready_message">Ready?</string>
+    <string name="ready_message">READY!</string>
+    <string name="wait_message">Wait…</string>
+    <string name="fire_message">FIRE!</string>
+    <string name="win_message">YOU WIN!</string>
+    <string name="lose_message">You lose…</string>
+</resources>
