@@ -4,39 +4,42 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 
 public class ResourceLoader {
+    MainActivity activity;
     Resources resources;
     //Images that are going to be used
-    Drawable imgPlayer1;
-    Drawable imgPlayer1Early;
-    Drawable imgPlayer1Ready;
-    Drawable imgPlayer1Shoot;
-    Drawable imgPlayer1Shot;
+    public Drawable imgPlayer1;
+    public Drawable imgPlayer1Early;
+    public Drawable imgPlayer1Ready;
+    public Drawable imgPlayer1Shoot;
+    public Drawable imgPlayer1Shot;
 
-    Drawable imgPlayer1BtnIdle;
-    Drawable imgPlayer1BtnReady;
-    Drawable imgPlayer1BtnWait;
-    Drawable imgPlayer1BtnFire;
-    Drawable imgPlayer1BtnWin;
-    Drawable imgPlayer1BtnLose;
+    public Drawable imgPlayer1BtnIdle;
+    public Drawable imgPlayer1BtnReady;
+    public Drawable imgPlayer1BtnWait;
+    public Drawable imgPlayer1BtnFire;
+    public Drawable imgPlayer1BtnWin;
+    public Drawable imgPlayer1BtnLose;
 
-    Drawable imgPlayer2;
-    Drawable imgPlayer2Early;
-    Drawable imgPlayer2Ready;
-    Drawable imgPlayer2Shoot;
-    Drawable imgPlayer2Shot;
+    public Drawable imgPlayer2;
+    public Drawable imgPlayer2Early;
+    public Drawable imgPlayer2Ready;
+    public Drawable imgPlayer2Shoot;
+    public Drawable imgPlayer2Shot;
 
-    Drawable imgPlayer2BtnIdle;
-    Drawable imgPlayer2BtnReady;
-    Drawable imgPlayer2BtnWait;
-    Drawable imgPlayer2BtnFire;
-    Drawable imgPlayer2BtnWin;
-    Drawable imgPlayer2BtnLose;
+    public Drawable imgPlayer2BtnIdle;
+    public Drawable imgPlayer2BtnReady;
+    public Drawable imgPlayer2BtnWait;
+    public Drawable imgPlayer2BtnFire;
+    public Drawable imgPlayer2BtnWin;
+    public Drawable imgPlayer2BtnLose;
 
-    Drawable imgAnnouncer;
-    Drawable imgAnnouncerReady;
-    Drawable imgAnnouncerFire;
+    public Drawable imgAnnouncer;
+    public Drawable imgAnnouncerReady;
+    public Drawable imgAnnouncerFire;
 
     ResourceLoader(MainActivity activity){
+        this.activity = activity;
+
         resources = activity.getResources();
 
         //Load drawables

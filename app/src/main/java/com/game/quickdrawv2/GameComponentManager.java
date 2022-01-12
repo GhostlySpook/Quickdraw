@@ -7,17 +7,17 @@ import android.widget.ImageView;
 public class GameComponentManager {
     MainActivity activity;
 
-    Button btnStart;
-    ImageButton btnPlayer1;
-    ImageButton btnPlayer2;
-    Button btnExit;
+    public Button btnStart;
+    public ImageButton btnPlayer1;
+    public ImageButton btnPlayer2;
+    public Button btnExit;
 
-    ImageView imageViewBackground;
-    ImageView imageViewTitle;
-    ImageView imageViewPlayer1;
-    ImageView imageViewPlayer2;
-    ImageView imageViewAnnouncer;
-    ImageView imageViewFlash;
+    public ImageView imageViewBackground;
+    public ImageView imageViewTitle;
+    public ImageView imageViewPlayer1;
+    public ImageView imageViewPlayer2;
+    public ImageView imageViewAnnouncer;
+    public ImageView imageViewFlash;
 
     GameComponentManager(MainActivity activity){
         this.activity = activity;
