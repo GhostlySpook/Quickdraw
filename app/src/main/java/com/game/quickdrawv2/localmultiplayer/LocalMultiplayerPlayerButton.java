@@ -4,12 +4,13 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageButton;
 
+import com.game.quickdrawv2.Character;
 import com.game.quickdrawv2.GameComponentManager;
 import com.game.quickdrawv2.MainActivity;
 import com.game.quickdrawv2.Player;
 import com.game.quickdrawv2.ResourceLoader;
 
-public class PlayerButton {
+public class LocalMultiplayerPlayerButton {
     MainActivity activity;
     LocalMultiplayerGame game;
 
@@ -31,7 +32,7 @@ public class PlayerButton {
 
     Character character;
 
-    PlayerButton(MainActivity activity, LocalMultiplayerGame game, Player player, Character playerCharacter){
+    LocalMultiplayerPlayerButton(MainActivity activity, LocalMultiplayerGame game, Player player, Character playerCharacter){
         this.activity = activity;
         this.gcm = activity.gcm;
         this.rl = activity.rl;

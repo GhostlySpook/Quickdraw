@@ -1,4 +1,4 @@
-package com.game.quickdrawv2.localmultiplayer;
+package com.game.quickdrawv2;
 
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
@@ -33,7 +33,7 @@ public class Character {
 
     int playerNo;
 
-    Character(MainActivity activity, int playerNo){
+    public Character(MainActivity activity, int playerNo){
         this.activity = activity;
 
         this.gcm = activity.gcm;

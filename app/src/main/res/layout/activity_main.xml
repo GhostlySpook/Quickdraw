@@ -108,7 +108,6 @@
         android:layout_marginTop="27dp"
         android:background="@android:color/transparent"
         android:foreground="@drawable/player1_idle_button"
-        android:onClick="onPlayer1ButtonClick"
         android:scaleType="fitXY"
         android:src="@drawable/player1_idle_button"
         android:visibility="invisible"
@@ -125,7 +124,6 @@
         android:layout_marginRight="11dp"
         android:background="@android:color/transparent"
         android:foreground="@drawable/player2_idle_button"
-        android:onClick="onPlayer2ButtonClick"
         android:scaleType="fitXY"
         android:src="@drawable/player2_idle_button"
         android:visibility="invisible"
@@ -145,5 +143,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/picture_frame" />
+
+    <Button
+        android:id="@+id/btnOnline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onOnlineButtonClick"
+        android:text="Online"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imgBackground"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/imgBackground" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,6 +11,7 @@ public class GameComponentManager {
     public ImageButton btnPlayer1;
     public ImageButton btnPlayer2;
     public Button btnExit;
+    public Button btnOnline;
 
     public ImageView imageViewBackground;
     public ImageView imageViewTitle;
@@ -27,6 +28,25 @@ public class GameComponentManager {
         btnPlayer1 = (ImageButton)activity.findViewById(R.id.btnReady1);
         btnPlayer2 = (ImageButton)activity.findViewById(R.id.btnReady2);
         btnExit = (Button)activity.findViewById(R.id.btnExit);
+        btnOnline = (Button)activity.findViewById(R.id.btnOnline);
+
+        imageViewBackground = (ImageView)activity.findViewById(R.id.imgBackground);
+        imageViewTitle = (ImageView)activity.findViewById(R.id.imgTitle);
+        imageViewPlayer1 = (ImageView)activity.findViewById(R.id.imgPlayer1);
+        imageViewPlayer2 = (ImageView)activity.findViewById(R.id.imgPlayer2);
+        imageViewAnnouncer = activity.findViewById(R.id.imgAnnouncer);
+        imageViewFlash = (ImageView)activity.findViewById(R.id.imgFlash);
+    }
+
+    public void update(/*MainActivity activity*/){
+        //this.activity = activity;
+
+        //Assign Buttons and ImageViews
+        btnStart = (Button)activity.findViewById(R.id.btnStart);
+        btnPlayer1 = (ImageButton)activity.findViewById(R.id.btnReady1);
+        btnPlayer2 = (ImageButton)activity.findViewById(R.id.btnReady2);
+        btnExit = (Button)activity.findViewById(R.id.btnExit);
+        btnOnline = (Button)activity.findViewById(R.id.btnOnline);
 
         imageViewBackground = (ImageView)activity.findViewById(R.id.imgBackground);
         imageViewTitle = (ImageView)activity.findViewById(R.id.imgTitle);

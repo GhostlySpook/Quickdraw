@@ -1,4 +1,4 @@
-package com.game.quickdrawv2.localmultiplayer;
+package com.game.quickdrawv2.onlinesingleplayer;
 
 import android.view.View;
 
@@ -8,24 +8,27 @@ import com.game.quickdrawv2.MainActivity;
 import com.game.quickdrawv2.MediaPlayerManager;
 import com.game.quickdrawv2.Player;
 import com.game.quickdrawv2.R;
+import com.game.quickdrawv2.Reaction;
 import com.game.quickdrawv2.ResourceLoader;
+import com.game.quickdrawv2.localmultiplayer.LocalMultiplayerPlayerButton;
 
 import java.io.IOException;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class LocalMultiplayerGame {
+public class OnlineSingleplayerGame {
     MainActivity activity;
     GameComponentManager gcm;
     ResourceLoader rl;
     MediaPlayerManager mpm;
 
-    Player player1;
-    Player player2;
+    Reaction reaction;
 
-    LocalMultiplayerPlayerButton player1Btn;
-    LocalMultiplayerPlayerButton player2Btn;
+    Player player1;
+    //Player player2;
+
+    OnlineSingleplayerPlayerButton player1Btn;
 
     Character player1Character;
     Character player2Character;
@@ -33,52 +36,63 @@ public class LocalMultiplayerGame {
     TimerTask readyShootTask;
     TimerTask cleanTask;
 
+    TimerTask computerShootTask;
+
     Timer timer = new Timer();
 
-    public LocalMultiplayerGame(MainActivity activity){
+    public OnlineSingleplayerGame(MainActivity activity, Reaction reaction){
         this.activity = activity;
         this.gcm = activity.gcm;
         this.rl = activity.rl;
         this.mpm = activity.mpm;
+
+        this.reaction = reaction;
     }
 
     public void start(){
+        //Hide unused buttons
         gcm.btnStart.setVisibility(View.INVISIBLE);
+        System.out.println("Hide start button");
         gcm.imageViewTitle.setVisibility(View.INVISIBLE);
         gcm.btnExit.setVisibility(View.INVISIBLE);
         gcm.btnOnline.setVisibility(View.INVISIBLE);
+
+        //Show announcer
         gcm.imageViewAnnouncer.setVisibility(View.VISIBLE);
 
         //Start player instances
         player1 = new Player(1);
-        player2 = new Player(2);
+        //player2 = new Player(2);
 
         player1Character = new Character(activity,1);
         player2Character = new Character(activity,2);
 
-        player1Btn = new LocalMultiplayerPlayerButton(activity, this, player1, player1Character);
-        player2Btn = new LocalMultiplayerPlayerButton(activity, this, player2, player2Character);
+        player1Btn = new OnlineSingleplayerPlayerButton(activity, this, player1, player1Character);
 
         player1Btn.waitReadyMode();
-        player2Btn.waitReadyMode();
+        //player2Btn.waitReadyMode();
+
         player1Character.showIdle();
         player2Character.showIdle();
     }
 
     public void checkReady(){
         //Check if both players are ready
-        if(player1.getReady() && player2.getReady()){
+        if(player1.getReady()/* && player2.getReady()*/){
             startWaitingPeriod();
         }
     }
 
     //Prepare waiting period for shooting///////////////////////////
     public void startWaitingPeriod(){
+        //Start wind
         mpm.mpWind.start();
 
         //Show waiting buttons
         player1Btn.waitMode();
-        player2Btn.waitMode();
+        //Prepare computer
+        player2Character.showReady();
+        //player2Btn.waitMode();
         gcm.imageViewAnnouncer.setImageDrawable(rl.imgAnnouncerReady);
 
         //Get random number from 5 to 10
@@ -94,8 +108,34 @@ public class LocalMultiplayerGame {
 
                     @Override
                     public void run() {
+                        //Make it available for player to shoot
                         player1Btn.fireMode();
-                        player2Btn.fireMode();
+
+                        //Activate time of reaction for computer!
+                        computerShootTask = new TimerTask(){
+                            @Override
+                            public void run() {
+                                activity.runOnUiThread(new Runnable() {
+
+                                    @Override
+                                    public void run() {
+                                        mpm.mpShot.start();
+                                        flash();
+                                        //player2Btn.showWin();
+                                        player2Character.showShoot();
+                                        player1Btn.showLose();
+                                        player1Character.showShot();
+
+                                        endGame();
+                                    }
+                                });
+
+                            }
+                        };
+
+                        timer.schedule(computerShootTask, reaction.getTime());
+
+                        //player2Btn.fireMode();
 
                         gcm.imageViewAnnouncer.setImageDrawable(rl.imgAnnouncerFire);
 
@@ -140,10 +180,10 @@ public class LocalMultiplayerGame {
             case R.id.btnReady1:
                 player1Btn.showLose();
                 player1Character.showEarly();
-                player2Btn.showWin();
+                //player2Btn.showWin();
                 break;
             case R.id.btnReady2:
-                player2Btn.showLose();
+                //player2Btn.showLose();
                 player2Character.showEarly();
                 player1Btn.showWin();
                 break;
@@ -164,11 +204,12 @@ public class LocalMultiplayerGame {
             case R.id.btnReady1:
                 player1Btn.showWin();
                 player1Character.showShoot();
-                player2Btn.showLose();
+                //player2Btn.showLose();
                 player2Character.showShot();
+                computerShootTask.cancel();
                 break;
             case R.id.btnReady2:
-                player2Btn.showWin();
+                //player2Btn.showWin();
                 player2Character.showShoot();
                 player1Btn.showLose();
                 player1Character.showShot();
@@ -187,7 +228,7 @@ public class LocalMultiplayerGame {
 
         //Disable both buttons
         gcm.btnPlayer1.setEnabled(false);
-        gcm.btnPlayer2.setEnabled(false);
+        //gcm.btnPlayer2.setEnabled(false);
 
         cleanTask = new TimerTask() {
             @Override
@@ -217,24 +258,24 @@ public class LocalMultiplayerGame {
                 //btnPlayer1.setText(R.string.not_ready_message);
                 gcm.btnPlayer1.setImageDrawable(rl.imgPlayer1BtnIdle);
                 gcm.btnPlayer1.setEnabled(true);
-                gcm.btnPlayer1.setOnClickListener(new View.OnClickListener() {
+                /*gcm.btnPlayer1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         player1Btn.readyMode();
                     }
-                });
+                });*/
                 gcm.imageViewPlayer1.setImageDrawable(rl.imgPlayer1);
 
                 gcm.btnPlayer2.setVisibility(View.INVISIBLE);
                 //btnPlayer2.setText(R.string.not_ready_message);
                 gcm.btnPlayer2.setImageDrawable(rl.imgPlayer2BtnIdle);
                 gcm.btnPlayer2.setEnabled(true);
-                gcm.btnPlayer2.setOnClickListener(new View.OnClickListener() {
+                /*gcm.btnPlayer2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         player2Btn.readyMode();
                     }
-                });
+                });*/
                 gcm.imageViewPlayer2.setImageDrawable(rl.imgPlayer2);
 
                 gcm.imageViewAnnouncer.setImageDrawable(rl.imgAnnouncer);
@@ -248,7 +289,7 @@ public class LocalMultiplayerGame {
         timer.purge();
 
         player1.reset();
-        player2.reset();
+        //player2.reset();
 
         try{
             mpm.mpWind.prepare();
