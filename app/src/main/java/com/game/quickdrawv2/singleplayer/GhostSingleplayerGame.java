@@ -1,9 +1,8 @@
-package com.game.quickdrawv2.onlinesingleplayer;
+ package com.game.quickdrawv2.singleplayer;
 
 import android.view.View;
 
 import com.game.quickdrawv2.Character;
-import com.game.quickdrawv2.Game;
 import com.game.quickdrawv2.GameComponentManager;
 import com.game.quickdrawv2.MainActivity;
 import com.game.quickdrawv2.MediaPlayerManager;
@@ -11,27 +10,27 @@ import com.game.quickdrawv2.Player;
 import com.game.quickdrawv2.R;
 import com.game.quickdrawv2.Reaction;
 import com.game.quickdrawv2.ResourceLoader;
-import com.game.quickdrawv2.localmultiplayer.LocalMultiplayerPlayerButton;
 
 import java.io.IOException;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class OnlineSingleplayerGame extends Game {
-    //MainActivity activity;
-    /*GameComponentManager gcm;
+public class GhostSingleplayerGame {
+    MainActivity activity;
+    GameComponentManager gcm;
     ResourceLoader rl;
-    MediaPlayerManager mpm;*/
+    MediaPlayerManager mpm;
 
-    Reaction reaction;
+    int time;
 
-    //Player player1;
+    Player player1;
+    //Player player2;
 
-    //OnlineSingleplayerPlayerButton player1Btn;
+    GhostSingleplayerPlayerButton player1Btn;
 
-    //Character player1Character;
-    //Character player2Character;
+    Character player1Character;
+    Character player2Character;
 
     TimerTask readyShootTask;
     TimerTask cleanTask;
@@ -40,17 +39,15 @@ public class OnlineSingleplayerGame extends Game {
 
     Timer timer = new Timer();
 
-    public OnlineSingleplayerGame(MainActivity activity){
-        super(activity);
+    public GhostSingleplayerGame(MainActivity activity, int time){
+        this.activity = activity;
+        this.gcm = activity.gcm;
+        this.rl = activity.rl;
+        this.mpm = activity.mpm;
+
+        this.time = time;
     }
 
-    public OnlineSingleplayerGame(MainActivity activity, Reaction reaction){
-        super(activity);
-
-        this.reaction = reaction;
-    }
-
-    @Override
     public void start(){
         //Hide unused buttons
         gcm.btnStart.setVisibility(View.INVISIBLE);
@@ -69,7 +66,7 @@ public class OnlineSingleplayerGame extends Game {
         player1Character = new Character(activity,1);
         player2Character = new Character(activity,2);
 
-        player1Btn = new OnlineSingleplayerPlayerButton(activity, this, player1, player1Character);
+        player1Btn = new GhostSingleplayerPlayerButton(activity, this, player1, player1Character);
 
         player1Btn.waitReadyMode();
         //player2Btn.waitReadyMode();
@@ -78,7 +75,6 @@ public class OnlineSingleplayerGame extends Game {
         player2Character.showIdle();
     }
 
-    @Override
     public void checkReady(){
         //Check if both players are ready
         if(player1.getReady()/* && player2.getReady()*/){
@@ -87,7 +83,6 @@ public class OnlineSingleplayerGame extends Game {
     }
 
     //Prepare waiting period for shooting///////////////////////////
-    @Override
     public void startWaitingPeriod(){
         //Start wind
         mpm.mpWind.start();
@@ -130,8 +125,6 @@ public class OnlineSingleplayerGame extends Game {
                                         player1Btn.showLose();
                                         player1Character.showShot();
 
-                                        winner = WINNER_2;
-
                                         endGame();
                                     }
                                 });
@@ -139,7 +132,7 @@ public class OnlineSingleplayerGame extends Game {
                             }
                         };
 
-                        timer.schedule(computerShootTask, reaction.getTime());
+                        timer.schedule(computerShootTask, time);
 
                         //player2Btn.fireMode();
 
@@ -157,7 +150,7 @@ public class OnlineSingleplayerGame extends Game {
         timer.schedule(readyShootTask, delay);
     }
 
-    /*public void flash(){
+    public void flash(){
         gcm.imageViewFlash.setVisibility(View.VISIBLE);
 
         TimerTask hideFlashTask = new TimerTask() {
@@ -173,37 +166,61 @@ public class OnlineSingleplayerGame extends Game {
         };
 
         timer.schedule(hideFlashTask, 100);
-    }*/
+    }
 
     //Period before a shooter is supposed to shoot//////////////////
     public void preShot(View view){
         mpm.mpEarly.start();
         mpm.mpWind.stop();
         flash();
-        player1Btn.showLose();
-        player1Character.showEarly();
+
+        //Check who shot, that one will lose
+        switch(view.getId()){
+            case R.id.btnReady1:
+                player1Btn.showLose();
+                player1Character.showEarly();
+                //player2Btn.showWin();
+                break;
+            case R.id.btnReady2:
+                //player2Btn.showLose();
+                player2Character.showEarly();
+                player1Btn.showWin();
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + view.getId());
+        }
+
         endGame();
     }
 
     //Can shoot now!///////////////////////////////////////////////////////
-    //This time the first player wins if it is activated
     public void waitShot(View v){
         mpm.mpShot.start();
         flash();
 
-        player1Btn.showWin();
-        player1Character.showShoot();
-
-        player2Character.showShot();
-        computerShootTask.cancel();
-
-        winner = WINNER_1;
+        //Check who shot, that one will win
+        switch(v.getId()){
+            case R.id.btnReady1:
+                player1Btn.showWin();
+                player1Character.showShoot();
+                //player2Btn.showLose();
+                player2Character.showShot();
+                computerShootTask.cancel();
+                break;
+            case R.id.btnReady2:
+                //player2Btn.showWin();
+                player2Character.showShoot();
+                player1Btn.showLose();
+                player1Character.showShot();
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + v.getId());
+        }
 
         endGame();
     }
 
     //End game///////////////////////////////////////////////////////////
-    @Override
     public void endGame(){
         //Cancel the game
         readyShootTask.cancel();
@@ -224,7 +241,6 @@ public class OnlineSingleplayerGame extends Game {
         timer.schedule(cleanTask, 4000);
     }
 
-    @Override
     public void reset(){
         activity.runOnUiThread(new Runnable() {
 

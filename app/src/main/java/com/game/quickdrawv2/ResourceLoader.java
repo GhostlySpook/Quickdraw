@@ -37,6 +37,8 @@ public class ResourceLoader {
     public Drawable imgAnnouncerReady;
     public Drawable imgAnnouncerFire;
 
+    public Drawable imgBtnBackground;
+
     ResourceLoader(MainActivity activity){
         this.activity = activity;
 
@@ -73,5 +75,7 @@ public class ResourceLoader {
         imgAnnouncer = resources.getDrawable(R.drawable.announcer);
         imgAnnouncerReady = resources.getDrawable(R.drawable.announcer_ready);
         imgAnnouncerFire = resources.getDrawable(R.drawable.announcer_fire);
+
+        imgBtnBackground = resources.getDrawable(android.R.drawable.btn_default);
     }
 }

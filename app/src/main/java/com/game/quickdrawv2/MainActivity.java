@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -21,7 +23,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.game.quickdrawv2.localmultiplayer.LocalMultiplayerGame;
+import com.game.quickdrawv2.onlinesingleplayer.OnlineGhostGame;
 import com.game.quickdrawv2.onlinesingleplayer.OnlineSingleplayerGame;
+import com.game.quickdrawv2.singleplayer.GhostSingleplayerGame;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -36,9 +40,13 @@ public class MainActivity extends AppCompatActivity {
     Resources resources;
     MainActivity activity;
 
+    Button btnChallenge;
+
     public GameComponentManager gcm;
     public ResourceLoader rl;
     public MediaPlayerManager mpm;
+
+    int time;
 
     //Start creation//////////////////////////////////////////////////////
     @Override
@@ -77,11 +85,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void onStartButtonClick(View view){
         gcm.update();
-        LocalMultiplayerGame game = new LocalMultiplayerGame(this);
+        //LocalMultiplayerGame game = new LocalMultiplayerGame(this);
+        Game game = new Game(this);
         game.start();
     }
 
-    public void onOnlineButtonClick(View view){
+    /*public void onOnlineButtonClick(View view){
         setContentView(R.layout.online_multiplayer);
 
         //Get saved users and display on the table
@@ -99,9 +108,20 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         try{
+                            //Create button to get reaction
+                            class PlayButton extends androidx.appcompat.widget.AppCompatButton{
+                                public Reaction reaction;
+
+                                PlayButton(Context ctx, Reaction reaction){
+                                    super(ctx);
+                                    this.reaction = reaction;
+                                }
+                            }
+
                             System.out.println("Response: " + response);
+
+                            //Good response
                             if(!(response.equals("null"))){
-                                //Good response
 
                                 JSONArray reader = new JSONArray(response);
 
@@ -113,26 +133,9 @@ public class MainActivity extends AppCompatActivity {
                                 for(int i = 0; i < len; i++){
                                     JSONObject obj = reader.getJSONObject(i);
 
-                                    TableRow newRow = new TableRow(ctx);
-
-                                    TextView id = new TextView(ctx);
-                                    TextView name = new TextView(ctx);
-                                    TextView time = new TextView(ctx);
-
                                     String sId = obj.getString("id");
                                     String sName = obj.getString("name");
                                     String sTime = obj.getString("time");
-
-                                    //Create button to get reaction
-                                    //Button btnReaction = new Button(ctx);
-                                    class PlayButton extends androidx.appcompat.widget.AppCompatButton{
-                                        public Reaction reaction;
-
-                                        PlayButton(Context ctx, Reaction reaction){
-                                            super(ctx);
-                                            this.reaction = reaction;
-                                        }
-                                    }
 
                                     final PlayButton btnReaction = new PlayButton(ctx, new Reaction(Integer.parseInt(sId), sName, Integer.parseInt(sTime)));
 
@@ -149,16 +152,30 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                     });
 
+                                    TableRow newRow = new TableRow(ctx);
+
+                                    TextView id = new TextView(ctx);
+                                    TextView name = new TextView(ctx);
+                                    TextView time = new TextView(ctx);
+
                                     //Add information to row and add row
                                     id.setText(sId);
-                                    name.setText(sName);
-                                    time.setText(sTime);
-                                    btnReaction.setText("Play!");
+                                    id.setTextColor(Color.WHITE);
 
-                                    newRow.addView(btnReaction);
+                                    name.setText(sName);
+                                    name.setTextColor(Color.WHITE);
+
+                                    time.setText(sTime);
+                                    time.setTextColor(Color.WHITE);
+
+                                    btnReaction.setText("Play!");
+                                    btnReaction.setBackgroundDrawable(rl.imgBtnBackground);
+                                    btnReaction.setTextColor(Color.BLACK);
+
                                     newRow.addView(id);
                                     newRow.addView(name);
                                     newRow.addView(time);
+                                    newRow.addView(btnReaction);
 
                                     tblLayout.addView(newRow);
                                 }
@@ -200,9 +217,103 @@ public class MainActivity extends AppCompatActivity {
 
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
+    }*/
+
+    public void onOnlineButtonClick(View view){
+        setContentView(R.layout.online_multiplayer);
+
+        TextView txtInitials = findViewById(R.id.txtInitials);
+        txtInitials.setText("Loading...");
+
+        btnChallenge = findViewById(R.id.btnChallengeFastest);
+        btnChallenge.setVisibility(View.INVISIBLE);
+
+        //Get saved users and display on the table
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url ="https://quickdraw-game.herokuapp.com/reaction/fastest";
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    //Get table
+                    Context ctx = getApplicationContext();
+                    TextView txtInitials = findViewById(R.id.txtInitials);
+                    TableLayout tblLayout = findViewById(R.id.tblReactions);
+
+                    @Override
+                    public void onResponse(String response) {
+                        try{
+                            System.out.println("Response: " + response);
+
+                            //Good response
+                            if(!(response.equals("null"))){
+
+                                JSONObject reader = new JSONObject(response);
+
+                                //Fill table from obtained array
+                                String sId = reader.getString("id");
+                                String sName = reader.getString("name");
+                                String sTime = reader.getString("time");
+
+                                time = Integer.parseInt(sTime);
+
+                                btnChallenge.setVisibility(View.VISIBLE);
+                                txtInitials.setText(sName);
+                            }
+                            else{
+                                System.out.println("Nothing was obtained");
+                                txtInitials.setText("Not found");
+                            }
+                        }
+                        catch(Exception error){
+                            System.out.println("Error after getting normal response: " + error);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    //Get table
+                    //Context ctx = getApplicationContext();
+                    TextView txtInitials = findViewById(R.id.txtInitials);
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println("Error response: " + error);
+                        txtInitials.setText("Error");
+                    }
+                }
+        );
+
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
+    public void onChallengeButtonClick(View view){
+        setContentView(R.layout.activity_main);
+        //this.activity = this;
+        gcm.update();
+
+        System.out.println("Changed activity");
+        System.out.println("Time: ");
+        System.out.println(Integer.toString(time));
+        OnlineGhostGame game = new OnlineGhostGame(this, time);
+        System.out.println("Started ghost game");
+        game.start();
+    }
+
+    public void onUploadButtonClick(View view){
+        setContentView(R.layout.activity_main);
+        gcm.update();
+
+        int time = 1000;
+
+        GhostSingleplayerGame game = new GhostSingleplayerGame(activity, time);
+        game.start();
+        System.out.println("Started ghost activity");
     }
 
     public void onReturnButtonClick(View view){
+        btnChallenge.setVisibility(View.INVISIBLE);
         setContentView(R.layout.activity_main);
     }
 

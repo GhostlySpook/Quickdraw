@@ -7,6 +7,14 @@ public class Reaction {
     String created;
     String modified;
 
+    public Reaction(){
+        this.id = 0;
+        this.name = "";
+        this.time = 0;
+        this.created = "";
+        this.modified = "";
+    }
+
     public Reaction(int id, String name, int time){
         this.id = id;
         this.name = name;
