@@ -4,11 +4,13 @@ import android.text.format.Time;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.game.quickdrawv2.Game;
@@ -35,7 +37,7 @@ public class OnlineGhostGame extends OnlineSingleplayerGame {
     long startTime;
     long endTime;
 
-    public OnlineGhostGame(MainActivity activity, int time){
+    public OnlineGhostGame(MainActivity activity, int time) {
         super(activity, new Reaction());
 
         this.reaction.setTime(time);
@@ -62,7 +64,9 @@ public class OnlineGhostGame extends OnlineSingleplayerGame {
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                reset();
+                /*reset();
+                hideHighscorePrompt();*/
+                returnMainScreen();
             }
         });
 
@@ -125,8 +129,6 @@ public class OnlineGhostGame extends OnlineSingleplayerGame {
 
                         timer.schedule(computerShootTask, reaction.getTime());
 
-                        //player2Btn.fireMode();
-
                         gcm.imageViewAnnouncer.setImageDrawable(rl.imgAnnouncerFire);
 
                         //Make sound and stop wind
@@ -157,13 +159,10 @@ public class OnlineGhostGame extends OnlineSingleplayerGame {
 
         //Disable both buttons
         gcm.btnPlayer1.setEnabled(false);
-        //gcm.btnPlayer2.setEnabled(false);
 
         cleanTask = new TimerTask() {
             @Override
             public void run() {
-
-                //Turn everything back to normal
 
                 //Upload highscore if player 1 won
                 if(winner == WINNER_1){
@@ -188,6 +187,7 @@ public class OnlineGhostGame extends OnlineSingleplayerGame {
                 btnCancel.setVisibility(View.VISIBLE);
 
                 txtInputInitials.setText("SNK");
+                player1Btn.hide();
             }
         });
     }
@@ -209,28 +209,27 @@ public class OnlineGhostGame extends OnlineSingleplayerGame {
                 }
 
                 //Send information of highscore
-
-                //Prepare JSON to send
-                /*JSONObject jsonBody = new JSONObject();
-                jsonBody.put("Name", initials);
-                jsonBody.put("Time", playerReactionTime);
-                final String requestBody = jsonBody.toString();*/
+                Map<String, String> postParam = new HashMap<String, String>();
+                postParam.put("name", name);
+                postParam.put("time", Long.toString(playerReactionTime));
 
                 RequestQueue queue = Volley.newRequestQueue(activity);
                 String url ="https://quickdraw-game.herokuapp.com/reaction";
 
-                final String finalName = name;
-
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                        new Response.Listener<String>() {
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url,
+                        new JSONObject(postParam), new Response.Listener<JSONObject>(){
                             //Get table
                             @Override
-                            public void onResponse(String response) {
+                            public void onResponse(JSONObject response) {
                                 try{
                                     System.out.println("Highscore sent!");
+                                    Toast.makeText(activity, "Highscore sent!", Toast.LENGTH_SHORT).show();
+                                    //btnUpload.setVisibility(View.INVISIBLE);
+                                    returnMainScreen();
                                 }
                                 catch(Exception error){
                                     System.out.println("Error after getting normal response: " + error);
+                                    //Toast.makeText(activity, "Error on Respon", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         },
@@ -238,56 +237,38 @@ public class OnlineGhostGame extends OnlineSingleplayerGame {
                             @Override
                             public void onErrorResponse(VolleyError error) {
                                 System.out.println("Error after trying to get response");
+                                Toast.makeText(activity, "Connection error", Toast.LENGTH_SHORT).show();
                             }
                         }
                 ){
-                    @Override
-                    protected Map<String, String> getParams() {
-                        // below line we are creating a map for
-                        // storing our values in key and value pair.
-                        Map<String, String> params = new HashMap<String, String>();
-
-                        // on below line we are passing our key
-                        // and value pair to our parameters.
-                        params.put("Name", finalName);
-                        params.put("Time", Long.toString(playerReactionTime));
-
-                        System.out.println("Parameters being returned");
-
-                        // at last we are
-                        // returning our params.
-                        return params;
-                    }
 
                     @Override
                     public Map<String, String> getHeaders() {
                         Map<String,String> params = new HashMap<String, String>();
-                        params.put("Content-Type","application/x-www-form-urlencoded");
+                        params.put("Content-Type","application/json; charset=utf-8");
                         return params;
                     }
-
-                    /*@Override
-                    public String getBodyContentType() {
-                        return "application/json; charset=utf-8";
-                    }
-
-                    @Override
-                    public byte[] getBody() {
-                        try {
-                            return requestBody == null ? null : requestBody.getBytes("utf-8");
-                        } catch (UnsupportedEncodingException uee) {
-                            return null;
-                        }
-                    }*/
 
                 };
 
                 // Add the request to the RequestQueue.
-                queue.add(stringRequest);
+                queue.add(jsonObjectRequest);
             }
         }
         catch(Exception error){
             System.out.println("Exception after pressing upload button: " + error);
         }
+    }
+
+    public void hideHighscorePrompt(){
+        lblInitials.setVisibility(View.INVISIBLE);
+        txtInputInitials.setVisibility(View.INVISIBLE);
+        btnUpload.setVisibility(View.INVISIBLE);
+        btnCancel.setVisibility(View.INVISIBLE);
+    }
+
+    public void returnMainScreen(){
+        reset();
+        hideHighscorePrompt();
     }
 }

@@ -67,28 +67,27 @@
         android:layout_height="227dp"
         android:layout_marginStart="162dp"
         android:layout_marginLeft="162dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="163dp"
         android:layout_marginRight="163dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/title"
-        tools:visibility="invisible" />
+        tools:visibility="visible" />
 
     <Button
         android:id="@+id/btnStart"
         android:layout_width="169dp"
         android:layout_height="77dp"
-        android:layout_marginBottom="52dp"
+        android:layout_marginBottom="80dp"
         android:background="@drawable/duel_button"
         android:foreground="@drawable/duel_button"
         android:onClick="onStartButtonClick"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imgBackground"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/imgBackground"
-        tools:visibility="invisible" />
+        tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/imgAnnouncer"
@@ -111,7 +110,6 @@
         android:layout_marginLeft="11dp"
         android:layout_marginTop="27dp"
         android:background="@android:color/transparent"
-        android:foreground="@drawable/player1_idle_button"
         android:scaleType="fitXY"
         android:src="@drawable/player1_idle_button"
         android:visibility="invisible"
@@ -127,7 +125,6 @@
         android:layout_marginEnd="11dp"
         android:layout_marginRight="11dp"
         android:background="@android:color/transparent"
-        android:foreground="@drawable/player2_idle_button"
         android:scaleType="fitXY"
         android:src="@drawable/player2_idle_button"
         android:visibility="invisible"
@@ -150,15 +147,15 @@
 
     <Button
         android:id="@+id/btnOnline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="160dp"
+        android:layout_height="77dp"
+        android:background="@drawable/online_button"
         android:onClick="onOnlineButtonClick"
-        android:text="Online"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imgBackground"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/imgBackground"
-        tools:visibility="invisible" />
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/lblHighscore1"
@@ -189,26 +186,6 @@
         app:layout_constraintEnd_toStartOf="@+id/imgPlayer2"
         app:layout_constraintTop_toBottomOf="@+id/txtInputInitials" />
 
-    <TextView
-        android:id="@+id/txtInputInitials"
-        android:layout_width="223dp"
-        android:layout_height="68dp"
-        android:layout_marginTop="2dp"
-        android:background="#D5D5D5"
-        android:editable="true"
-        android:enabled="true"
-        android:gravity="center"
-        android:maxLength="3"
-        android:text="SNK"
-        android:textColor="#000000"
-        android:textSize="48sp"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lblHighscore1"
-        tools:visibility="visible" />
-
     <Button
         android:id="@+id/btnUpload"
         android:layout_width="wrap_content"
@@ -220,5 +197,26 @@
         android:visibility="invisible"
         app:layout_constraintStart_toEndOf="@+id/imgPlayer1"
         app:layout_constraintTop_toBottomOf="@+id/txtInputInitials" />
+
+    <EditText
+        android:id="@+id/txtInputInitials"
+        android:layout_width="223dp"
+        android:layout_height="68dp"
+        android:layout_marginTop="2dp"
+        android:background="#D5D5D5"
+        android:capitalize="characters"
+        android:editable="true"
+        android:enabled="true"
+        android:gravity="center"
+        android:inputType="textCapCharacters"
+        android:maxLength="3"
+        android:text="SNK"
+        android:textColor="#000000"
+        android:textSize="48sp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblHighscore1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -113,4 +113,6 @@ public class PlayerButton {
     public void showWin(){
         viewButton.setImageDrawable(imgBtnWin);
     }
+
+    public void hide() { viewButton.setVisibility(View.INVISIBLE); }
 }
